@@ -9,16 +9,15 @@
 <div id="mvvm-app">
     <input type="text" v-model="someStr">
     <input type="text" v-model="child.someStr">
-    <!-- <p v-class="className" class="abc">
+    <p v-class="className" class="abc">
         {{someStr}}
         <span v-text="child.someStr"></span>
-    </p> -->
+    </p>
     <p>{{getHelloWord}}</p>
     <p v-html="child.htmlStr"></p>
     <button v-on:click="clickBtn">change model</button>
 </div>
 
-<script src="http://cdn.bootcss.com/vue/1.0.25/vue.js"></script>
 <script src="./js/observer.js"></script>
 <script src="./js/watcher.js"></script>
 <script src="./js/compile.js"></script>
