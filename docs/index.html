@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MVVM</title>
+</head>
+<body>
+<div id="mvvm-app">
+    <input type='text' v-model='someStr'/>
+    <input type='text' v-model='child.someStr'/>
+    <p v-class='className' class='abc'>
+        {{someStr}}
+    </p>
+    <p>{{getHelloWorld}}</p>
+    <p v-html='child.htmlStr'></p>
+    <button v-on:click='clickBtn'>change model</button>
+</div>
+<script src="./dist/index.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+
