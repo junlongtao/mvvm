@@ -4,6 +4,7 @@ function Compile(el, vm) {
 
     if (this.$el) {
         this.$fragment = this.node2Fragment(this.$el);
+        console.log(this.$fragment)
         this.init();
         this.$el.appendChild(this.$fragment);
     }

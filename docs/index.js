@@ -23,6 +23,6 @@ var vm = new MVVM({
         }
     }
 })
-vm.$watch('child.someStr', function () {
-    console.log(arguments)
-})
+// vm.$watch('child.someStr', function () {
+//     console.log(arguments)
+// })
