@@ -7,7 +7,7 @@ var vm = new MVVM({
         className: 'btn',
         htmlStr: '<span style="color: #f00">red</span>',
         child: {
-            someStr: 'World!'
+            someStr: 'World!xxxxxx'
         }
     },
     computed: {

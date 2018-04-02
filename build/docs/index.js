@@ -66,7 +66,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "./docs/index.js");
+/******/ 	return __webpack_require__(__webpack_require__.s = 0);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -79,7 +79,7 @@
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _src_MVVM__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../src/MVVM */ \"./src/MVVM.js\");\n\n\nvar vm = new _src_MVVM__WEBPACK_IMPORTED_MODULE_0__[\"default\"]({\n    el: '#mvvm-app',\n    data: {\n        someStr: 'hello',\n        className: 'btn',\n        htmlStr: '<span style=\"color: #f00\">red</span>',\n        child: {\n            someStr: 'World!'\n        }\n    },\n    computed: {\n        getHelloWorld: function () {\n            return this.someStr + this.child.someStr;\n        }\n    },\n    methods: {\n        clickBtn: function (e) {\n            var randomStrArr = ['childOne', 'childTwo', 'childThree'];\n            this.child.someStr = randomStrArr[parseInt(Math.random() * 3)];\n        }\n    }\n});\nvm.$watch('child.someStr', function () {\n    console.log(arguments);\n});\n\n//# sourceURL=webpack:///./docs/index.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _src_MVVM__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../src/MVVM */ \"./src/MVVM.js\");\n\n\nvar vm = new _src_MVVM__WEBPACK_IMPORTED_MODULE_0__[\"default\"]({\n    el: '#mvvm-app',\n    data: {\n        someStr: 'hello',\n        className: 'btn',\n        htmlStr: '<span style=\"color: #f00\">red</span>',\n        child: {\n            someStr: 'World!'\n        }\n    },\n    computed: {\n        getHelloWorld: function () {\n            return this.someStr + this.child.someStr;\n        }\n    },\n    methods: {\n        clickBtn: function (e) {\n            var randomStrArr = ['childOne', 'childTwo', 'childThree'];\n            this.child.someStr = randomStrArr[parseInt(Math.random() * 3)];\n        }\n    }\n});\n// vm.$watch('child.someStr', function () {\n//     console.log(arguments)\n// })\n\n//# sourceURL=webpack:///./docs/index.js?");
 
 /***/ }),
 
@@ -91,7 +91,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _src
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"default\", function() { return Compile; });\nclass Compile {\n\n    constructor() {\n        const fragment = this.node2Fragment(el);\n        el.appendChild(fragment);\n    }\n\n    node2Fragment(el) {\n        const fragment = document.createDocumentFragment();\n        return fragment;\n    }\n\n}\n\n//# sourceURL=webpack:///./src/Compile.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"default\", function() { return Compile; });\n\nfunction isElementNode(node) {\n    return node.nodetype === 2;\n}\nfunction isTextNode(node) {\n    return node.nodeType === 3;\n}\nclass Compile {\n\n    constructor(el) {\n        el = this.isElementNode(el) ? el : document.querySelector(el);\n        const fragment = this.node2Fragment(el);\n\n        this.compileElement(el);\n        el.appendChild(fragment);\n    }\n\n    node2Fragment(el) {\n        const fragment = document.createDocumentFragment();\n        let child;\n        while (child = el.firstChild) {\n            console.log(child);\n            fragment.appendChild(child);\n        }\n        return fragment;\n    }\n\n    isElementNode(node) {\n        return node.nodeType == 1;\n    }\n\n    compileElement(el) {\n        [].slice.call(el.childNodes).forEach(function (item) {\n            if (isElementNode(item)) {} else if (isTextNode(item)) {} else {}\n        });\n    }\n}\n\n//# sourceURL=webpack:///./src/Compile.js?");
 
 /***/ }),
 
@@ -104,6 +104,17 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) *
 
 "use strict";
 eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"default\", function() { return MVVM; });\n/* harmony import */ var _Compile__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Compile */ \"./src/Compile.js\");\n\n\nclass MVVM {\n\n    constructor(options) {\n        new _Compile__WEBPACK_IMPORTED_MODULE_0__[\"default\"](options.el || document.body, this);\n    }\n}\n\n//# sourceURL=webpack:///./src/MVVM.js?");
+
+/***/ }),
+
+/***/ 0:
+/*!*****************************!*\
+  !*** multi ./docs/index.js ***!
+  \*****************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("module.exports = __webpack_require__(/*! ./docs/index.js */\"./docs/index.js\");\n\n\n//# sourceURL=webpack:///multi_./docs/index.js?");
 
 /***/ })
 

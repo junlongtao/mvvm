@@ -27,6 +27,7 @@ Compile.prototype = {
         this.compileElement(this.$fragment);
     },
 
+    //compileChildNodes
     compileElement: function(el) {
         var childNodes = el.childNodes,
             me = this;
@@ -48,6 +49,7 @@ Compile.prototype = {
         });
     },
 
+    //compileAttrs
     compile: function(node) {
         var nodeAttrs = node.attributes,
             me = this;
