@@ -19,7 +19,6 @@ var vm = new MVVM({
         clickBtn: function (e) {
             var randomStrArr = ['childOne', 'childTwo', 'childThree']
             this.child.someStr = randomStrArr[parseInt(Math.random() * 3)]
-
         }
     }
 })
