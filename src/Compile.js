@@ -1,3 +1,5 @@
+import { Dep } from "./MVVM";
+
 function isElementNode(node) {
     return node.nodeType === 1
 }
@@ -23,11 +25,7 @@ export default class Compile {
             const reg = /\{\{(.*)\}\}/
             const text = node.textContent
             if (isTextNode(node) && reg.test(text)) {
-                if (typeof vm[RegExp.$1] === 'function') {
-                    node.textContent = vm[RegExp.$1].call(vm)
-                } else {
-                    node.textContent = vm[RegExp.$1]
-                }
+                compileUtil.text(node, vm, RegExp.$1)
             } else if (isElementNode(node)) {
                 this.compileAttrs(node, vm)
             }
@@ -68,12 +66,8 @@ export default class Compile {
                 var event = attrName.split(':')[1]
                 node.addEventListener(event, vm.methods[attrValue].bind(vm), false)
             } else {
-                var items = attrValue.split('.')
-                var res = vm
-                items.map(item => {
-                    res = res[item]
-                })
-                node.value = res
+                const updater = compileUtil[attrName.substring(2)]
+                updater && updater(node, vm, attrValue)
             }
         })
     }
@@ -91,13 +85,62 @@ export default class Compile {
     }
 }
 
-class compileUtil {
-    static text(node, vm, exp) {
-        this.bind(node, vm, exp, 'text')
-    }
+const compileUtil = {
+    text: function (node, vm, exp) {
+        function updateText() {
+            const value = compileUtil.getVmValue(vm, exp)
+            node.textContent = value
+        }
 
-    static bind(node, vm, exp, dir) {
+        Dep.target = updateText
+        updateText()
+    },
 
+    model: function (node, vm, exp) {
+        function updateValue() {
+            const value = compileUtil.getVmValue(vm, exp)
+            node.value = value
+        }
+
+        Dep.target = updateValue
+        updateValue()
+
+        node.addEventListener('input', e => {
+            compileUtil.setVmValue(vm, exp, e.target.value)
+        })
+    },
+
+    html: function (node, vm, exp) {
+        Dep.target = function () {
+            node.innerHTML = compileUtil.getVmValue(vm, exp)
+        }
+        node.innerHTML = compileUtil.getVmValue(vm, exp)
+    },
+
+    getVmValue: function (vm, exp) {
+        if (typeof vm[exp] === 'function') {
+            return vm[exp].call(vm)
+        }
+
+        const items = exp.split('.')
+        let res = vm
+        items.map(item => {
+            res = res[item]
+        })
+        return res
+    },
+
+    setVmValue: function (vm, exp, value) {
+        var val = vm;
+        exp = exp.split('.');
+        exp.forEach(function(k, i) {
+            // 非最后一个key，更新val的值
+            if (i < exp.length - 1) {
+                val = val[k];
+            } else {
+                val[k] = value;
+            }
+        });
     }
 }
 

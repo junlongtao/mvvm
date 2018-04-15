@@ -7,12 +7,15 @@
 <body>
 <div id="mvvm-app">
     <input type='text' v-model='someStr'/>
+    <p v-class='className' class='abc'>
+        <span>someStr: </span> {{someStr}}
+    </p>
     <input type='text' v-model='child.someStr'/>
     <p v-class='className' class='abc'>
-        {{someStr}}
+        <span>child.someStr: </span> {{child.someStr}}
     </p>
     <p>{{getHelloWorld}}</p>
-    <p v-html='child.htmlStr'></p>
+    <p v-html='htmlStr'></p>
     <button v-on:click='clickBtn'>change model</button>
 </div>
 </body>

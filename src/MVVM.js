@@ -3,8 +3,9 @@ import Compile from './Compile'
 export default class MVVM {
 
     constructor(options) {
-        for (let key in options.data) {
-            this.proxyData(key, options.data)
+        this._data = options.data
+        for (let key in this._data) {
+            this.proxyData(key)
         }
         //for (let key in options.computed) {
         //    this.proxyData(key, options.computed)
@@ -14,17 +15,39 @@ export default class MVVM {
         new Compile(options.el || document.body, this)
     }
 
-    proxyData(key, data) {
+    proxyData(key) {
+        const dep = new Dep()
         Object.defineProperty(this, key, {
             configurable: false,
             enumerable: true,
-            get: function() {
-                return data[key];
+            get: function () {
+                if(Dep.target){
+                    dep.addSub(Dep.target)
+                    Dep.target = null
+                }
+                return this._data[key]
             },
-            set: function(value) {
+            set: function (value) {
                 console.log(value)
-                this[key] = value;
+                this._data[key] = value
+                dep.notify()
             }
         });
+    }
+}
+
+export class Dep {
+    constructor() {
+        this.subs = []
+    }
+
+    addSub(sub) {
+        this.subs.push(sub)
+    }
+
+    notify() {
+        this.subs.forEach(item => {
+            item.call()
+        })
     }
 }
