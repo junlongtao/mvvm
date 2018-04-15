@@ -65,7 +65,8 @@ export default class Compile {
                 return;
             }
             if (this.isEventDirective(attrName)) {
-                //compileUtil.eventHandler(node, me.$vm, exp, dir)
+                var event = attrName.split(':')[1]
+                node.addEventListener(event, vm.methods[attrValue].bind(vm), false)
             } else {
                 var items = attrValue.split('.')
                 var res = vm
