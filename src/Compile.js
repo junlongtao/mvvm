@@ -53,10 +53,8 @@ export default class Compile {
     // }
 
     compileAttrs(node, vm) {
-        console.log(node)
         var nodeAttrs = node.attributes;
         [].slice.call(nodeAttrs).forEach(item => {
-            console.log(item)
             var attrName = item.name
             var attrValue = item.value
             if (!this.isDirective(attrName)) {
@@ -92,7 +90,8 @@ const compileUtil = {
             node.textContent = value
         }
 
-        Dep.target = updateText
+        vm._watchers[exp] = updateText
+        window.vm = vm
         updateText()
     },
 
@@ -102,7 +101,8 @@ const compileUtil = {
             node.value = value
         }
 
-        Dep.target = updateValue
+        compileUtil.addWatcher(vm, exp, update)
+        vm._watchers[exp] = updateValue
         updateValue()
 
         node.addEventListener('input', e => {
@@ -111,10 +111,12 @@ const compileUtil = {
     },
 
     html: function (node, vm, exp) {
-        Dep.target = function () {
+        function updateHtml() {
             node.innerHTML = compileUtil.getVmValue(vm, exp)
         }
-        node.innerHTML = compileUtil.getVmValue(vm, exp)
+
+        vm._watchers[exp] = updateHtml
+        updateHtml()
     },
 
     getVmValue: function (vm, exp) {
@@ -131,16 +133,22 @@ const compileUtil = {
     },
 
     setVmValue: function (vm, exp, value) {
-        var val = vm;
-        exp = exp.split('.');
-        exp.forEach(function(k, i) {
+        var val = vm, exps;
+        exps = exp.split('.');
+        exps.forEach(function (k, i) {
             // 非最后一个key，更新val的值
-            if (i < exp.length - 1) {
+            if (i < exps.length - 1) {
                 val = val[k];
             } else {
                 val[k] = value;
             }
         });
+
+        for (let i in vm._watchers) {
+            if (i === exp) {
+                vm._watchers[i].call(vm)
+            }
+        }
     }
 }
 

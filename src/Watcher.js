@@ -1,6 +1,6 @@
 export default class Watcher{
 
-    constructor(field, callback, context){
+    constructor(vm, exp, cb){
 
     }
 }
