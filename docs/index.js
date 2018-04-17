@@ -18,9 +18,7 @@ var vm = new MVVM({
     methods: {
         clickBtn: function (e) {
             var randomStrArr = ['childOne', 'childTwo', 'childThree']
-            this.child = {
-                someStr: Math.random()*1000
-            }
+            this.child.someStr = Math.random()*10000
         }
     }
 })

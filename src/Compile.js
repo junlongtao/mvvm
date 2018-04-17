@@ -1,4 +1,5 @@
 import { Dep } from "./MVVM";
+import { Watcher } from './watcher';
 
 function isElementNode(node) {
     return node.nodeType === 1
@@ -85,25 +86,21 @@ export default class Compile {
 
 const compileUtil = {
     text: function (node, vm, exp) {
-        function updateText() {
+        function updater() {
             const value = compileUtil.getVmValue(vm, exp)
             node.textContent = value
         }
-
-        vm._watchers[exp] = updateText
-        window.vm = vm
-        updateText()
+        updater()
+        new Watcher(vm, exp, updater);
     },
 
     model: function (node, vm, exp) {
-        function updateValue() {
+        function updater() {
             const value = compileUtil.getVmValue(vm, exp)
             node.value = value
         }
-
-        compileUtil.addWatcher(vm, exp, update)
-        vm._watchers[exp] = updateValue
-        updateValue()
+        updater()
+        new Watcher(vm, exp, updater);
 
         node.addEventListener('input', e => {
             compileUtil.setVmValue(vm, exp, e.target.value)
@@ -111,12 +108,11 @@ const compileUtil = {
     },
 
     html: function (node, vm, exp) {
-        function updateHtml() {
+        function updater() {
             node.innerHTML = compileUtil.getVmValue(vm, exp)
         }
-
-        vm._watchers[exp] = updateHtml
-        updateHtml()
+        updater()
+        new Watcher(vm, exp, updater);
     },
 
     getVmValue: function (vm, exp) {
@@ -124,18 +120,17 @@ const compileUtil = {
             return vm[exp].call(vm)
         }
 
-        const items = exp.split('.')
         let res = vm
-        items.map(item => {
+        exp.split('.').map(item => {
             res = res[item]
         })
         return res
     },
 
     setVmValue: function (vm, exp, value) {
-        var val = vm, exps;
-        exps = exp.split('.');
-        exps.forEach(function (k, i) {
+        var val = vm;
+        var exps = exp.split('.')
+        exps.forEach((k, i) => {
             // 非最后一个key，更新val的值
             if (i < exps.length - 1) {
                 val = val[k];
@@ -143,12 +138,6 @@ const compileUtil = {
                 val[k] = value;
             }
         });
-
-        for (let i in vm._watchers) {
-            if (i === exp) {
-                vm._watchers[i].call(vm)
-            }
-        }
     }
 }
 
