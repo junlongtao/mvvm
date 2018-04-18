@@ -17,6 +17,13 @@
     <p>{{getHelloWorld}}</p>
     <p v-html='htmlStr'></p>
     <button v-on:click='clickBtn'>change model</button>
+    <p v-if='visible'>v-if test</p>
+    <button v-on:click="onToggleClick">change v-if</button>
+    <ol>
+        <li v-for="todo in todos">
+            {{ todo.text }}
+        </li>
+    </ol>
 </div>
 </body>
 </html>

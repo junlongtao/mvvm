@@ -1,7 +1,7 @@
 import Compile from './Compile'
 import { observe, Dep } from "./Observer";
 
-export default class MVVM {
+export class MVVM {
 
     constructor(options) {
         this._data = options.data
@@ -13,8 +13,8 @@ export default class MVVM {
         //    this[key] = options.computed[key]
         //}
         this.methods = options.methods
-        new Compile(options.el || document.body, this)
-
+        this.el = typeof options.el === 'string' ? document.querySelector(options.el) : options.el
+        new Compile(this.el || document.body, this)
     }
 
     _proxy(key) {
@@ -24,7 +24,7 @@ export default class MVVM {
             enumerable: true,
             get: function proxyGetter() {
                 console.log(this)
-                if(Dep.target){
+                if (Dep.target) {
                     Dep.target.addToDep(dep)
                 }
                 return this._data[key];
@@ -38,6 +38,7 @@ export default class MVVM {
         observe(this._data[key])
     }
 }
+
 //
 // function observe(data) {
 //     if (!data || typeof data !== 'object') {

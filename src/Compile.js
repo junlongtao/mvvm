@@ -1,4 +1,4 @@
-import { Dep } from "./MVVM";
+import { Dep, MVVM } from "./MVVM";
 import { Watcher } from './watcher';
 
 function isElementNode(node) {
@@ -16,7 +16,6 @@ function isTextNode(node) {
 export default class Compile {
 
     constructor(el, vm) {
-        el = document.querySelector(el)
         this.compileChildNodes(el, vm)
     }
 
@@ -78,10 +77,6 @@ export default class Compile {
     isEventDirective(attName) {
         return attName.indexOf('v-on:') === 0
     }
-
-    compileText(node, exp) {
-        compileUtil.text(node, exp)
-    }
 }
 
 const compileUtil = {
@@ -90,8 +85,9 @@ const compileUtil = {
             const value = compileUtil.getVmValue(vm, exp)
             node.textContent = value
         }
+
         updater()
-        new Watcher(vm, exp, updater);
+        new Watcher(vm, exp, updater)
     },
 
     model: function (node, vm, exp) {
@@ -99,6 +95,7 @@ const compileUtil = {
             const value = compileUtil.getVmValue(vm, exp)
             node.value = value
         }
+
         updater()
         new Watcher(vm, exp, updater);
 
@@ -111,8 +108,33 @@ const compileUtil = {
         function updater() {
             node.innerHTML = compileUtil.getVmValue(vm, exp)
         }
+
         updater()
         new Watcher(vm, exp, updater);
+    },
+
+    if: function (node, vm, exp) {
+        function updater() {
+            node.style.display = compileUtil.getVmValue(vm, exp) ? 'block' : 'none'
+        }
+
+        updater()
+        new Watcher(vm, exp, updater)
+    },
+
+    for: function (node, vm, exp) {
+        function updater() {
+            const value = compileUtil.getVmValue(vm, exp.split(' ')[2])
+            new MVVM({
+                el: node,
+                data: {
+                    todo: value[0]
+                }
+            })
+        }
+
+        updater()
+        new Watcher(vm, exp, updater)
     },
 
     getVmValue: function (vm, exp) {
