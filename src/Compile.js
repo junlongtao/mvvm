@@ -22,7 +22,7 @@ export default class Compile {
     compileChildNodes(el, vm) {
         for (let i = 0, len = el.childNodes.length; i < len; i++) {
             const node = el.childNodes[i]
-            const reg = /\{\{(.*)\}\}/
+            const reg = /\{\{\s?(.*)\s?\}\}/
             const text = node.textContent
             if (isTextNode(node) && reg.test(text)) {
                 compileUtil.text(node, vm, RegExp.$1)
@@ -124,12 +124,17 @@ const compileUtil = {
 
     for: function (node, vm, exp) {
         function updater() {
+            const parent = node.parentElement
             const value = compileUtil.getVmValue(vm, exp.split(' ')[2])
-            new MVVM({
-                el: node,
-                data: {
-                    todo: value[0]
-                }
+            value.map(item => {
+                const el = node.cloneNode(true)
+                parent.appendChild(el)
+                new MVVM({
+                    el: el,
+                    data: {
+                        todo: item
+                    }
+                })
             })
         }
 
@@ -143,15 +148,16 @@ const compileUtil = {
         }
 
         let res = vm
-        exp.split('.').map(item => {
+        const exps = exp.split('.')
+        exps.map(item => {
             res = res[item]
         })
         return res
     },
 
     setVmValue: function (vm, exp, value) {
-        var val = vm;
-        var exps = exp.split('.')
+        let val = vm;
+        const exps = exp.split('.')
         exps.forEach((k, i) => {
             // 非最后一个key，更新val的值
             if (i < exps.length - 1) {
