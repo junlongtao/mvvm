@@ -13,73 +13,54 @@ function isTextNode(node) {
     return node.nodeType === 3
 }
 
-export default class Compile {
-
-    constructor(el, vm) {
-        this.compileChildNodes(el, vm)
-    }
-
-    compileChildNodes(el, vm) {
-        for (let i = 0, len = el.childNodes.length; i < len; i++) {
-            const node = el.childNodes[i]
-            const reg = /\{\{\s?(.*)\s?\}\}/
-            const text = node.textContent
-            if (isTextNode(node) && reg.test(text)) {
-                compileUtil.text(node, vm, RegExp.$1)
-            } else if (isElementNode(node)) {
-                this.compileAttrs(node, vm)
-            }
-
-            if (node.childNodes && node.childNodes.length > 0) {
-                this.compileChildNodes(node, vm)
-            }
+function compileChildNodes(el, vm) {
+    for (let i = 0, len = el.childNodes.length; i < len; i++) {
+        const node = el.childNodes[i]
+        const reg = /\{\{\s?(.*)\s?\}\}/
+        const text = node.textContent
+        if (isTextNode(node) && reg.test(text)) {
+            compileUtil.text(node, vm, RegExp.$1)
+        } else if (isElementNode(node)) {
+            compileAttrs(node, vm)
         }
-    }
 
-    // compileChildNodes(el) {
-    //     [].slice.call(el.childNodes).forEach(function (item) {
-    //         const text = item.textContent
-    //         const reg = /\{\{(.*)\}\}/
-    //         if (isElementNode(item)) {
-    //             this.compileAttrs(item)
-    //         } else if (isTextNode(item) && reg.test(text)) {
-    //             this.compileText(item, RegExp.$1)
-    //         }
-    //
-    //         if (item.childNodes && item.childNodes.length) {
-    //             this.compileChildNodes(item)
-    //         }
-    //     })
-    // }
-
-    compileAttrs(node, vm) {
-        var nodeAttrs = node.attributes;
-        [].slice.call(nodeAttrs).forEach(item => {
-            var attrName = item.name
-            var attrValue = item.value
-            if (!this.isDirective(attrName)) {
-                return;
-            }
-            if (this.isEventDirective(attrName)) {
-                var event = attrName.split(':')[1]
-                node.addEventListener(event, vm.methods[attrValue].bind(vm), false)
-            } else {
-                const updater = compileUtil[attrName.substring(2)]
-                updater && updater(node, vm, attrValue)
-            }
-        })
-    }
-
-    isDirective(attrName) {
-        return attrName.indexOf('v-') === 0
-    }
-
-    isEventDirective(attName) {
-        return attName.indexOf('v-on:') === 0
+        if (node.childNodes && node.childNodes.length > 0) {
+            compileChildNodes(node, vm)
+        }
     }
 }
 
+function compileAttrs(node, vm) {
+    var nodeAttrs = node.attributes;
+    [].slice.call(nodeAttrs).forEach(item => {
+        var attrName = item.name
+        var attrValue = item.value
+        if (!compileUtil.isDirective(attrName)) {
+            return;
+        }
+        if (compileUtil.isEventDirective(attrName)) {
+            var event = attrName.split(':')[1]
+            node.addEventListener(event, vm.methods[attrValue].bind(vm), false)
+        } else {
+            const updater = compileUtil[attrName.substring(2)]
+            updater && updater(node, vm, attrValue)
+        }
+    })
+}
+
+export function compile(el, vm) {
+    compileChildNodes(el, vm)
+}
+
 const compileUtil = {
+    isDirective: function(attrName) {
+        return attrName.indexOf('v-') === 0
+    },
+
+    isEventDirective: function(attName) {
+        return attName.indexOf('v-on:') === 0
+    },
+
     text: function (node, vm, exp) {
         function updater() {
             const value = compileUtil.getVmValue(vm, exp)
@@ -124,10 +105,13 @@ const compileUtil = {
 
     for: function (node, vm, exp) {
         function updater() {
+            const cloneNode = node.cloneNode(true)
             const parent = node.parentElement
+            parent.removeChild(node)
             const value = compileUtil.getVmValue(vm, exp.split(' ')[2])
             value.map(item => {
-                const el = node.cloneNode(true)
+                console.log('type', typeof item)
+                const el = cloneNode.cloneNode(true)
                 parent.appendChild(el)
                 new MVVM({
                     el: el,
@@ -139,7 +123,7 @@ const compileUtil = {
         }
 
         updater()
-        new Watcher(vm, exp, updater)
+        //new Watcher(vm, exp, updater)
     },
 
     getVmValue: function (vm, exp) {
@@ -150,6 +134,7 @@ const compileUtil = {
         let res = vm
         const exps = exp.split('.')
         exps.map(item => {
+            console.log(item)
             res = res[item]
         })
         return res

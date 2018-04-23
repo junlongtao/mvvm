@@ -1,4 +1,4 @@
-import Compile from './Compile'
+import { compile } from './Compile'
 import { observe, Dep } from "./Observer";
 
 export class MVVM {
@@ -14,7 +14,7 @@ export class MVVM {
         //}
         this.methods = options.methods
         this.el = typeof options.el === 'string' ? document.querySelector(options.el) : options.el
-        new Compile(this.el || document.body, this)
+        compile(this.el || document.body, this)
     }
 
     _proxy(key) {
