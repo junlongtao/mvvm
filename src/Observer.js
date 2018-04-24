@@ -4,7 +4,7 @@
 export class Observer{
 
     constructor(obj){
-        def(obj, '__ob__', this)
+        def(obj, '__ob__', this, false)
         this.dep = new Dep()
         const keys = Object.keys(obj)
         for(let i=0, len=keys.length; i<len; i++){

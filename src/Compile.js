@@ -109,8 +109,10 @@ const compileUtil = {
             const parent = node.parentElement
             parent.removeChild(node)
             const value = compileUtil.getVmValue(vm, exp.split(' ')[2])
-            value.map(item => {
-                console.error('type', typeof item)
+            console.log(value.length)
+            for (let i = 0, len = value.length; i < len; i++) {
+                const item = value[i]
+                console.error('item', item)
                 const el = cloneNode.cloneNode(true)
                 parent.appendChild(el)
                 new MVVM({
@@ -119,7 +121,7 @@ const compileUtil = {
                         todo: item
                     }
                 })
-            })
+            }
         }
 
         updater()
