@@ -4,7 +4,7 @@ var vm = new MVVM({
     el: '#mvvm-app',
     data: {
         visible: true,
-        someStr: 'hello',
+        someStr: 'hello mvvm!',
         className: 'btn',
         htmlStr: '<span style="color: #f00">red</span>',
         child: {
@@ -23,8 +23,7 @@ var vm = new MVVM({
     },
     methods: {
         clickBtn: function (e) {
-            var randomStrArr = ['childOne', 'childTwo', 'childThree']
-            this.child.someStr = Math.random()*10000
+            this.someStr = this.someStr.split('').reverse().join('')
         },
         onToggleClick: function (e) {
             this.visible = !this.visible

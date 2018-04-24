@@ -25,7 +25,7 @@ export class Watcher {
     getVmValue(vm, exp) {
         let res = vm
         exp.split('.').map(item => {
-            res = res[item]
+            if (res) res = res[item]
         })
         return res
     }

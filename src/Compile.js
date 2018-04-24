@@ -53,11 +53,11 @@ export function compile(el, vm) {
 }
 
 const compileUtil = {
-    isDirective: function(attrName) {
+    isDirective: function (attrName) {
         return attrName.indexOf('v-') === 0
     },
 
-    isEventDirective: function(attName) {
+    isEventDirective: function (attName) {
         return attName.indexOf('v-on:') === 0
     },
 
@@ -110,7 +110,7 @@ const compileUtil = {
             parent.removeChild(node)
             const value = compileUtil.getVmValue(vm, exp.split(' ')[2])
             value.map(item => {
-                console.log('type', typeof item)
+                console.error('type', typeof item)
                 const el = cloneNode.cloneNode(true)
                 parent.appendChild(el)
                 new MVVM({
@@ -123,7 +123,7 @@ const compileUtil = {
         }
 
         updater()
-        //new Watcher(vm, exp, updater)
+        new Watcher(vm, exp, updater)
     },
 
     getVmValue: function (vm, exp) {
@@ -134,8 +134,7 @@ const compileUtil = {
         let res = vm
         const exps = exp.split('.')
         exps.map(item => {
-            console.log(item)
-            res = res[item]
+            if (res) res = res[item]
         })
         return res
     },
