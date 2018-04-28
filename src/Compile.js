@@ -105,14 +105,13 @@ const compileUtil = {
 
     for: function (node, vm, exp) {
         function updater() {
-            const cloneNode = node.cloneNode(true)
             const parent = node.parentElement
-            parent.removeChild(node)
+            parent.innerHTML = ''
+
+            const cloneNode = node.cloneNode(true)
             const value = compileUtil.getVmValue(vm, exp.split(' ')[2])
-            console.log(value.length)
             for (let i = 0, len = value.length; i < len; i++) {
                 const item = value[i]
-                console.error('item', item)
                 const el = cloneNode.cloneNode(true)
                 parent.appendChild(el)
                 new MVVM({
