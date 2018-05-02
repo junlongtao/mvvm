@@ -113,6 +113,7 @@ const compileUtil = {
             for (let i = 0, len = value.length; i < len; i++) {
                 const item = value[i]
                 const el = cloneNode.cloneNode(true)
+                el.removeAttribute('v-for')
                 parent.appendChild(el)
                 new MVVM({
                     el: el,

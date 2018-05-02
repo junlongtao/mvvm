@@ -26,6 +26,7 @@ export class MVVM {
                 console.log(this)
                 if (Dep.target) {
                     Dep.target.addToDep(dep)
+                    Dep.target = null
                 }
                 return this._data[key];
             },

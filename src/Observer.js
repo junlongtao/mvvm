@@ -21,6 +21,7 @@ export class Observer{
             get: function(){
                 if(Dep.target){
                     Dep.target.addToDep(dep)
+                    Dep.target = null
                 }
                 return val
             },
