@@ -4,6 +4,7 @@ import { observe, Dep } from "./Observer";
 export class MVVM {
 
     constructor(options) {
+        this._options = options
         this._data = options.data
         Object.keys(this._data).forEach(key => {
             this._proxy(key);
@@ -38,6 +39,14 @@ export class MVVM {
 
         observe(this._data[key])
     }
+}
+
+function createClass(){
+    return new Function('console.log("kkkkkk")')
+}
+
+MVVM.extend = function(options){
+    return createClass()
 }
 
 //

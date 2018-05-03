@@ -1,6 +1,11 @@
 import { Dep, MVVM } from "./MVVM";
 import { Watcher } from './watcher';
 
+function isComponentNode(node, vm) {
+    const tagName = node.tagName.toLowerCase()
+    return vm._options.components[tagName]
+}
+
 function isElementNode(node) {
     return node.nodeType === 1
 }
@@ -31,6 +36,12 @@ function compileChildNodes(el, vm) {
 }
 
 function compileAttrs(node, vm) {
+    const tagName = node.tagName.toLowerCase()
+    if(vm._options.components[tagName]){
+        console.log('is component')
+        return
+    }
+
     var nodeAttrs = node.attributes;
     [].slice.call(nodeAttrs).forEach(item => {
         var attrName = item.name

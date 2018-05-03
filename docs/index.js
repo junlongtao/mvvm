@@ -1,5 +1,9 @@
 import { MVVM } from '../src/MVVM'
 
+var MyComponent = MVVM.extend({
+    template: `<p>{{message}}</p>`,
+})
+
 var vm = new MVVM({
     el: '#mvvm-app',
     data: {
@@ -13,7 +17,8 @@ var vm = new MVVM({
         todos: [
             {text: '学习javascript'},
             {text: '学习vue'},
-            {text: '整个牛项目'}
+            {text: '整个牛项目'},
+            {text: '快快快快快'}
         ]
     },
     computed: {
@@ -28,6 +33,9 @@ var vm = new MVVM({
         onToggleClick: function (e) {
             this.visible = !this.visible
         }
+    },
+    components: {
+        'my-component': MyComponent
     }
 })
 // vm.$watch('child.someStr', function () {
