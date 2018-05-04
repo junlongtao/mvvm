@@ -4,6 +4,10 @@ import { observe, Dep } from "./Observer";
 export class MVVM {
 
     constructor(options) {
+        this._init(options)
+    }
+
+    _init(options) {
         this._options = options
         this._data = options.data
         Object.keys(this._data).forEach(key => {
@@ -42,11 +46,18 @@ export class MVVM {
 }
 
 function createClass(){
-    return new Function('console.log("kkkkkk")')
+    return function Component(options){
+        console.log('---------------------')
+        this._init(options)
+    }
 }
 
 MVVM.extend = function(options){
-    return createClass()
+    const component = createClass()
+    component.prototype = MVVM.prototype
+    component.prototype.constructor = component
+    component.options = options
+    return component
 }
 
 //

@@ -1,7 +1,7 @@
 import { MVVM } from '../src/MVVM'
 
 var MyComponent = MVVM.extend({
-    template: `<p>{{message}}</p>`,
+    template: `<p>{{message}} <span>kkkkkkk</span></p>`,
 })
 
 var vm = new MVVM({

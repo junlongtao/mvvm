@@ -37,8 +37,23 @@ function compileChildNodes(el, vm) {
 
 function compileAttrs(node, vm) {
     const tagName = node.tagName.toLowerCase()
-    if(vm._options.components[tagName]){
-        console.log('is component')
+    const component = vm._options.components[tagName]
+    if (component) {
+        const template = component.options.template
+        const doc = new DOMParser().parseFromString(template, 'text/html')
+        const el = doc.querySelector('body').firstChild
+        node.parentNode.insertBefore(el, node)
+        node.parentNode.removeChild(node)
+
+        const options = {
+            el: el,
+            data: {}
+        }
+        const attributes = node.attributes;
+        [].slice.call(attributes).forEach(item => {
+            options.data[item.name] = item.value
+        })
+        new component(options)
         return
     }
 
