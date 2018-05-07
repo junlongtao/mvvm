@@ -37,7 +37,7 @@ function compileChildNodes(el, vm) {
 
 function compileAttrs(node, vm) {
     const tagName = node.tagName.toLowerCase()
-    const component = vm._options.components[tagName]
+    const component = vm._options.components && vm._options.components[tagName]
     if (component) {
         const template = component.options.template
         const doc = new DOMParser().parseFromString(template, 'text/html')

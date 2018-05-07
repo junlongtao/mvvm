@@ -1,7 +1,16 @@
 import { MVVM } from '../src/MVVM'
 
 var MyComponent = MVVM.extend({
-    template: `<p>{{message}} <span>kkkkkkk</span></p>`,
+    template: `<p>{{message}} <em> kkkkkkk</em></p>`,
+})
+
+var ButtonCounter = MVVM.extend({
+    template: `<button v-on:click="count++">You clicked me {{count}} times</button>`,
+    data: function(){
+        return {
+            count: 0
+        }
+    }
 })
 
 var vm = new MVVM({
@@ -35,7 +44,8 @@ var vm = new MVVM({
         }
     },
     components: {
-        'my-component': MyComponent
+        'my-component': MyComponent,
+        'button-counter': ButtonCounter
     }
 })
 // vm.$watch('child.someStr', function () {
