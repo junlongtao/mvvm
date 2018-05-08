@@ -8,11 +8,11 @@
 <div id="mvvm-app">
     <input type='text' v-model='someStr'/>
     <p v-class='className' class='abc'>
-        <span>someStr: </span> {{someStr}}
+        someStr: {{someStr}}
     </p>
     <input type='text' v-model='child.someStr'/>
     <p v-class='className' class='abc'>
-        <span>child.someStr: </span> {{child.someStr}}
+        child.someStr: {{child.someStr}}
     </p>
     <p>{{getHelloWorld}}</p>
     <p v-html='htmlStr'></p>

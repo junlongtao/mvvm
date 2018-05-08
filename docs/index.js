@@ -5,11 +5,9 @@ var MyComponent = MVVM.extend({
 })
 
 var ButtonCounter = MVVM.extend({
-    template: `<button v-on:click="count++">You clicked me {{count}} times</button>`,
-    data: function(){
-        return {
-            count: 0
-        }
+    template: `<button v-on:click="this.count++">You clicked me {{count}} times</button>`,
+    data: {
+        count: 0
     }
 })
 

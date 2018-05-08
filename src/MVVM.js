@@ -1,4 +1,4 @@
-import { compile } from './Compile'
+import { Compile } from './Compile'
 import { observe, Dep } from "./Observer";
 
 export class MVVM {
@@ -8,18 +8,17 @@ export class MVVM {
     }
 
     _init(options) {
-        this._options = options
-        this._data = options.data
-        Object.keys(this._data).forEach(key => {
+        this.$options = options
+        this.$data = options.data
+        Object.keys(this.$data).forEach(key => {
             this._proxy(key);
         });
         //for (let key in options.computed) {
         //    this.proxyData(key, options.computed)
         //    this[key] = options.computed[key]
         //}
-        this.methods = options.methods
-        this.el = typeof options.el === 'string' ? document.querySelector(options.el) : options.el
-        compile(this.el || document.body, this)
+        const el = typeof options.el === 'string' ? document.querySelector(options.el) : options.el
+        new Compile(el || document.body, this)
     }
 
     _proxy(key) {
@@ -31,17 +30,17 @@ export class MVVM {
                 console.log(this)
                 if (Dep.target) {
                     Dep.target.addToDep(dep)
-                    Dep.target = null
+                    // Dep.target = null
                 }
-                return this._data[key];
+                return this.$data[key];
             },
             set: function proxySetter(newVal) {
-                this._data[key] = newVal;
+                this.$data[key] = newVal;
                 dep.notify()
             }
         });
 
-        observe(this._data[key])
+        observe(this.$data[key])
     }
 }
 
@@ -56,7 +55,7 @@ MVVM.extend = function(options){
     const component = createClass()
     component.prototype = MVVM.prototype
     component.prototype.constructor = component
-    component.options = options
+    component._options = options
     return component
 }
 
