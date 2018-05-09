@@ -27,7 +27,7 @@ export class MVVM {
             configurable: false,
             enumerable: true,
             get: function proxyGetter() {
-                console.log(this)
+                console.log(this, key, this.$data[key])
                 if (Dep.target) {
                     Dep.target.addToDep(dep)
                     // Dep.target = null
